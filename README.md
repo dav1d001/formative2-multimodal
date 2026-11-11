@@ -104,13 +104,10 @@ A naive row-level join gives 213 rows (96 phantom rows, 33 real transactions los
 
 | Member | Contribution |
 |---|---|
-| Zaga | Task 1 (data merge, cleaning, validation, feature engineering, EDA); Task 2 image pipeline, notebook and `image_features.csv`; repo structure and README |
-| Nkuba | Face photos (neutral, smiling, surprised) |
-| David | Face photos (neutral, smiling, surprised) |
-| Rolande | Face photos (neutral, smiling, surprised) |
-| Sheila | Face photos (neutral, smiling, surprised) |
-
-_Update this table as Tasks 3, 4 and 6 are completed – every member's contribution must be listed in the final report._
+| David | Task 1 (data merge, cleaning, validation, feature engineering, EDA); Task 2 image pipeline, notebook and `image_features.csv`; repo structure and README |
+| Nkuba |
+| Rolande |
+| Sheila |
 
 ## Deliverables checklist
 
@@ -121,4 +118,4 @@ _Update this table as Tasks 3, 4 and 6 are completed – every member's contribu
 **Links:** Report: _TBD_ · Demo video: _TBD_
 
 ## Privacy
-Face and voice recordings are biometric data of real people, shared with each member's consent for this assignment only. Keep this repository private and shared only with the group and instructor.
+Face and voice recordings are biometric data of real people, shared with each member's consent for this assignment only.
