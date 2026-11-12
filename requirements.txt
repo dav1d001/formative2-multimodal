@@ -9,3 +9,5 @@ scikit-image
 opencv-python>=4.8,<5     # 4.x ships the Haar face-detector used for auto-cropping (OpenCV 5 removed it)
 jupyter
 # optional (CNN face embeddings): torch torchvision
+xgboost
+joblib

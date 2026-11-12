@@ -106,7 +106,7 @@ A naive row-level join gives 213 rows (96 phantom rows, 33 real transactions los
 |---|---|
 | David | Task 1 (data merge, cleaning, validation, feature engineering, EDA); Task 2 image pipeline, notebook and `image_features.csv`; repo structure and README |
 | Nkuba |
-| Rolande |
+| Rolande | Task 4 (face, voice and product models, evaluation, notebook, report snippets) |
 | Sheila |
 
 ## Deliverables checklist
@@ -119,3 +119,29 @@ A naive row-level join gives 213 rows (96 phantom rows, 33 real transactions los
 
 ## Privacy
 Face and voice recordings are biometric data of real people, shared with each member's consent for this assignment only.
+
+## Task 4 – Face, voice and product models
+
+| Model | Script | Features | Leakage-aware split | Best result |
+|---|---|---|---|---|
+| Face recognition | `src/face_model.py` | Image histogram, HOG, LBP and image statistics | Leave-one-expression-out (3 folds) | Logistic regression: accuracy 1.000, macro-F1 1.000, log-loss 0.065; open-set distance balanced accuracy 0.912 |
+| Voice verification | `src/voice_model.py` | MFCC means + centroid, bandwidth and rolloff means/std (19 features) | Leave-one-phrase-out; recording augmentations stay together | Random Forest: accuracy 0.646, macro-F1 0.587, log-loss 1.059; verification balanced accuracy 0.778 at threshold 0.315 vs 0.250 identification chance |
+| Product recommendation | `src/product_model.py` | Pre-purchase social, temporal and prior-history features | Repeated 5-fold StratifiedGroupKFold by customer (seeds 0–4) | LogisticRegression(C=0.05) selected: mean accuracy 0.239 ± 0.088, macro-F1 0.223 ± 0.081, log-loss 1.629 ± 0.129; prior baseline: accuracy 0.217, log-loss 1.601 |
+
+The face and voice labels are unified in memory: `nkuba` is normalized to `junior`; source files and CSVs remain unchanged. The best model by macro-F1 (standard LogisticRegression) was not used because its mean log-loss 2.122 was more than 0.05 above the baseline 1.601; LogisticRegression(C=0.05) was selected with mean log-loss 1.629, within 0.05 of baseline. Its result is slightly above the baseline, consistent with weak signal. The product model excludes identifiers and post-purchase fields from real prediction. Its member-to-customer recommendation demo is explicitly a simulation. Run `python src/train_all_models.py` to train and save the models and evaluation artifacts.
+
+Voice feature/model ablation (pooled leave-one-phrase-out):
+
+| Feature set | Model | Features | Accuracy | Macro-F1 | Log-loss | Verification balanced accuracy |
+|---|---|---:|---:|---:|---:|---:|
+| all | Logistic Regression | 49 | 0.417 | 0.400 | 6.535 | 0.677 |
+| all | SVM-RBF | 49 | 0.438 | 0.309 | 1.146 | 0.712 |
+| all | Random Forest | 49 | 0.583 | 0.517 | 1.323 | 0.715 |
+| mfcc_means | Logistic Regression | 13 | 0.396 | 0.415 | 2.788 | 0.691 |
+| mfcc_means | SVM-RBF | 13 | 0.312 | 0.250 | 1.199 | 0.694 |
+| mfcc_means | Random Forest | 13 | 0.604 | 0.536 | 1.085 | 0.743 |
+| mfcc_means+spectral_means | Logistic Regression | 19 | 0.396 | 0.382 | 7.051 | 0.677 |
+| mfcc_means+spectral_means | SVM-RBF | 19 | 0.438 | 0.309 | 1.146 | 0.712 |
+| mfcc_means+spectral_means | Random Forest (selected) | 19 | 0.646 | 0.587 | 1.059 | 0.778 |
+
+The feature set was chosen by cross-validation on a small dataset, so these numbers may be slightly optimistic. The voice verification warning remains because balanced accuracy is below 0.8. The untuned Semana outsider is rejected for claims david (0.210), junior (0.280), and sheila (0.070), but accepted for rolande (0.440); the outsider issue is not solved.
