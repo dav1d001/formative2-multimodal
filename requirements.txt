@@ -11,3 +11,5 @@ jupyter
 # optional (CNN face embeddings): torch torchvision
 xgboost
 joblib
+librosa
+soundfile
